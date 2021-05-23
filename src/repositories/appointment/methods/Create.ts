@@ -26,7 +26,6 @@ export async function Create(
       newAppointment = new AppointmentEntity();
 
       newAppointment.date = date;
-
       newAppointment.doctor_id = doctorEntity.id;
       newAppointment.patient_id = patientEntity.id;
       newAppointment.newPatient = newPatient;
@@ -34,9 +33,6 @@ export async function Create(
       throw new NotFoundException();
     }
   } else {
-    if (patient_id) {
-      throw new BadRequestException();
-    }
     const doctorEntity = await DoctorEntity.findOne(doctor_id);
 
     if (doctorEntity) {
@@ -56,7 +52,6 @@ export async function Create(
     if (err.code === '23502') {
       throw new BadRequestException();
     } else {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }

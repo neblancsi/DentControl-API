@@ -5,6 +5,7 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   OneToMany,
+  Timestamp,
 } from 'typeorm';
 import { AppointmentEntity } from '../appointment/appointment.entity';
 
@@ -20,7 +21,7 @@ export class PatientEntity extends BaseEntity implements Patient {
   email: string;
 
   @Column()
-  age: number;
+  birthDate: Date;
 
   @OneToMany(() => AppointmentEntity, (appointment) => appointment.patient_id, {
     onUpdate: 'CASCADE',

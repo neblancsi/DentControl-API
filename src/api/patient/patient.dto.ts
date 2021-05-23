@@ -1,6 +1,10 @@
+import { IsDate, IsEmail, IsISO8601, IsString } from 'class-validator';
+
 export class CreatePatientDTO {
+  @IsString()
   public readonly name: string;
+  @IsEmail()
   public readonly email: string;
-  public readonly age: number;
+  @IsISO8601()
+  public readonly birthDate: Date;
 }
-//TODO validation

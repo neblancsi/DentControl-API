@@ -14,9 +14,9 @@ export class PatientRepository
   extends Repository<PatientEntity>
   implements IPatientRepository {
   public async Create(patient: Patient): Promise<void> {
-    const { name, age, email } = patient;
+    const { name, birthDate, email } = patient;
     const newPatient = new PatientEntity();
-    newPatient.age = age;
+    newPatient.birthDate = birthDate;
     newPatient.email = email;
     newPatient.name = name;
 
@@ -24,6 +24,7 @@ export class PatientRepository
       await newPatient.save();
     } catch (err) {
       if (err.code === '23502') {
+        console.log(err);
         throw new BadRequestException();
       } else {
         throw new InternalServerErrorException();

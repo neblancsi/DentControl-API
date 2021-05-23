@@ -10,24 +10,19 @@ Swagger UI: http://localhost:3000/docs
 
 ## Installation
 
-place database connection options in the src/config/config.ts file or in a .env file in the root folder
+place passport authentication options in the src/config/config.ts file or in a .env file in the root folder
 
-then:
+place databse config options in a ormconfig.json file in the root folder
+
+run:
 
 ```bash
 $ npm install
-```
 
-## Running the app
+$ npx typeorm migration:generate -n MyTable -d src/migrations
 
-```bash
-# development
+$ npm run build
+
 $ npm run start
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
-

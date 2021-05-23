@@ -1,7 +1,7 @@
-import { IsBoolean, IsDateString, IsInt, IsOptional } from 'class-validator';
+import { IsBoolean, IsInt, IsISO8601, IsOptional } from 'class-validator';
 
 export class CreateAppointmentDTO {
-  @IsDateString()
+  @IsISO8601()
   public readonly date: Date;
   @IsInt()
   public readonly doctor: number;
@@ -10,4 +10,9 @@ export class CreateAppointmentDTO {
   public readonly patient?: number;
   @IsBoolean()
   public readonly newPatient: boolean;
+}
+
+export class GetAppointmentDTO extends CreateAppointmentDTO {
+  @IsInt()
+  public readonly id: number;
 }

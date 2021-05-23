@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { AuthService } from 'src/modules/auth/user.service';
+import { AuthService } from 'src/modules/auth/auth.service';
 import { Public } from 'src/modules/auth/public.decorator';
 import { AuthDTO, CreateUserDTO } from './auth.dto';
 import { ApiTags } from '@nestjs/swagger';

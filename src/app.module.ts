@@ -5,7 +5,6 @@ import { DoctorModule } from './modules/doctor/doctor.module';
 import { PatientModule } from './modules/patient/patient.module';
 import { AppointmentModule } from './modules/appointment/appointment.module';
 import { ApplicationModule } from './modules/application.module';
-import { PersistenceModule } from './repositories/persistence.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import config from './config/config';
@@ -20,7 +19,6 @@ import config from './config/config';
     PatientModule,
     AppointmentModule,
     ApplicationModule,
-    PersistenceModule,
   ],
 })
 export class AppModule {}

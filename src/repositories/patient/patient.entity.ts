@@ -5,7 +5,6 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   OneToMany,
-  Timestamp,
 } from 'typeorm';
 import { AppointmentEntity } from '../appointment/appointment.entity';
 

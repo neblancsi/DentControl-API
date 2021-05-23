@@ -10,9 +10,9 @@ Swagger UI: http://localhost:3000/docs
 
 ## Installation
 
-place passport authentication options in the src/config/config.ts file or in a .env file in the root folder
+place auth config options in the src/config/config.ts file or in a .env file in the root folder
 
-place databse config options in a ormconfig.json file in the root folder
+place database config options in a ormconfig.json file in the root folder
 
 run:
 

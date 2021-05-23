@@ -6,7 +6,7 @@ import {
   Unique,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { UserRole } from './user-roles.enum';
+import { UserRole } from '../../common/enums/user-roles.enum';
 
 @Entity()
 @Unique(['username', 'email'])

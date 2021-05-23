@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppointmentRepository } from './appointment.repository';
+import { AppointmentEntity } from './appointment.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AppointmentRepository])],
-  exports: [AppointmentRepository],
-  providers: [AppointmentRepository],
+  imports: [TypeOrmModule.forFeature([AppointmentEntity])],
+  exports: [TypeOrmModule],
 })
 export class AppointmentRepositoryModule {}

@@ -7,7 +7,7 @@ import { AuthDTO, CreateUserDTO } from 'src/api/auth/auth.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import * as bcrypt from 'bcrypt';
-import { UserRole } from './user-roles.enum';
+import { UserRole } from '../../common/enums/user-roles.enum';
 import { updateUserRoleDTO } from 'src/api/user/user.dto';
 
 @EntityRepository(UserEntity)

@@ -1,8 +1,8 @@
 import { Body, Controller, Put, UseGuards } from '@nestjs/common';
-import { AuthService } from 'src/modules/auth/user.service';
+import { AuthService } from 'src/modules/auth/auth.service';
 import { Roles } from 'src/modules/auth/roles.decorator';
 import { RolesGuard } from 'src/modules/auth/roles.guard';
-import { UserRole } from 'src/repositories/user/user-roles.enum';
+import { UserRole } from 'src/common/enums/user-roles.enum';
 import { updateUserRoleDTO } from './user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 

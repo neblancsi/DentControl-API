@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './user.service';
+import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
-import { UserPersistenceModule } from 'src/repositories/user/user-persistence.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PersistenceModule } from 'src/repositories/persistence.module';
 
 @Module({
   providers: [AuthService, JwtStrategy],
 
   imports: [
-    UserPersistenceModule,
+    PersistenceModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],

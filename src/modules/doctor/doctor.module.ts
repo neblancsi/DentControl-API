@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { DoctorRepositoryModule } from 'src/repositories/doctor/doctor-repository.module';
+import { PersistenceModule } from 'src/repositories/persistence.module';
 import { DoctorService } from './doctor.service';
 
 @Module({
   providers: [DoctorService],
-  imports: [DoctorRepositoryModule],
+  imports: [PersistenceModule],
   exports: [DoctorService],
 })
 export class DoctorModule {}

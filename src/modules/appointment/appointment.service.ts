@@ -68,10 +68,18 @@ export class AppointmentService implements IRepository {
   }
 
   public async GetAll(): Promise<AppointmentEntity[]> {
-    return await this.appointmentRepository.find();
+    try {
+      return await this.appointmentRepository.find();
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 
   public async GetByID(id): Promise<AppointmentEntity> {
-    return await this.appointmentRepository.findOne({ id });
+    try {
+      return await this.appointmentRepository.findOne(id);
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 }

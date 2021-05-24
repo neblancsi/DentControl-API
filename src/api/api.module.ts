@@ -8,6 +8,9 @@ import { AuthController } from './auth/auth.controller';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
+import { DoctorMapper } from './doctor/doctor.mapper';
+import { PatientMapper } from './patient/patient.mapper';
+import { AppointmentMapper } from './appointment/appointment.mapper';
 
 @Module({
   controllers: [
@@ -23,6 +26,9 @@ import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    DoctorMapper,
+    PatientMapper,
+    AppointmentMapper,
   ],
 })
 export class ApiModule {}

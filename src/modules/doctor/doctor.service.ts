@@ -37,10 +37,18 @@ export class DoctorService implements IRepository {
   }
 
   public async GetAll(): Promise<DoctorEntity[]> {
-    return await this.doctorRepository.find();
+    try {
+      return await this.doctorRepository.find();
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 
   public async GetByID(id): Promise<DoctorEntity> {
-    return await this.doctorRepository.findOne({ id });
+    try {
+      return await this.doctorRepository.findOne(id);
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 }

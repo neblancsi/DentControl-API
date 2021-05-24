@@ -35,10 +35,18 @@ export class PatientService implements IRepository {
   }
 
   public async GetAll(): Promise<PatientEntity[]> {
-    return await this.patientRepository.find();
+    try {
+      return await this.patientRepository.find();
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 
   public async GetByID(id): Promise<PatientEntity> {
-    return await this.patientRepository.findOne({ id });
+    try {
+      return await this.patientRepository.findOne(id);
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 }

@@ -11,7 +11,7 @@ import { UserRole } from '../../common/enums/user-roles.enum';
 @Entity()
 @Unique(['username', 'email'])
 export class UserEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn() //TODO uuid
   id: number;
 
   @Column()

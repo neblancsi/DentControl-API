@@ -1,4 +1,3 @@
-import { Appointment } from 'src/models/IAppointment';
 import {
   Column,
   Entity,
@@ -11,8 +10,8 @@ import { DoctorEntity } from '../doctor/doctor.entity';
 import { PatientEntity } from '../patient/patient.entity';
 
 @Entity()
-export class AppointmentEntity extends BaseEntity implements Appointment {
-  @PrimaryGeneratedColumn()
+export class AppointmentEntity extends BaseEntity {
+  @PrimaryGeneratedColumn() //TODO uuid
   id: number;
 
   @Column()
@@ -26,12 +25,12 @@ export class AppointmentEntity extends BaseEntity implements Appointment {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'patient_id' })
-  patient_id?: number;
+  patient?: PatientEntity;
 
   @ManyToOne(() => DoctorEntity, (doctor) => doctor.id, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'doctor_id' })
-  doctor_id: number;
+  doctor: DoctorEntity;
 }

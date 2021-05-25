@@ -4,55 +4,61 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { Appointment } from 'src/models/IAppointment';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppointmentEntity } from 'src/repositories/appointment/appointment.entity';
 import { Repository } from 'typeorm';
 import { DoctorEntity } from 'src/repositories/doctor/doctor.entity';
 import { IRepository } from 'src/common/interfaces/IRepository';
+import { PatientEntity } from 'src/repositories/patient/patient.entity';
+import { CreateAppointmentDTO } from 'src/api/appointment/appointment.dto';
 
 @Injectable()
 export class AppointmentService implements IRepository {
   constructor(
-    @InjectRepository(AppointmentEntity)
-    private readonly appointmentRepository: Repository<AppointmentEntity>,
+    @InjectRepository(PatientEntity)
+    private readonly patientRepository: Repository<PatientEntity>,
     @InjectRepository(DoctorEntity)
     private readonly doctorRepository: Repository<DoctorEntity>,
+    @InjectRepository(AppointmentEntity)
+    private readonly appointmentRepository: Repository<AppointmentEntity>,
   ) {}
 
-  public async Create(appointment: Appointment): Promise<void> {
-    const { date, doctor_id, patient_id, newPatient } = appointment;
+  public async Create(dto: CreateAppointmentDTO): Promise<void> {
+    const { date, doctor_id, patient_id, newPatient } = dto;
 
     let newAppointment;
 
     if (!newPatient) {
-      const patientEntity = await this.appointmentRepository.findOne(
-        patient_id,
-      );
+      try {
+        const patientEntity = await this.patientRepository.findOneOrFail(
+          patient_id,
+        );
 
-      const doctorEntity = await this.doctorRepository.findOne(doctor_id);
+        const doctorEntity = await this.doctorRepository.findOneOrFail(
+          doctor_id,
+        );
 
-      if (doctorEntity && patientEntity) {
-        newAppointment = new AppointmentEntity();
-
-        newAppointment.date = date;
-        newAppointment.doctor_id = doctorEntity.id;
-        newAppointment.patient_id = patientEntity.id;
-        newAppointment.newPatient = newPatient;
-      } else {
+        newAppointment = AppointmentEntity.create({
+          date: date,
+          doctor: doctorEntity,
+          patient: patientEntity,
+          newPatient: newPatient,
+        });
+      } catch (error) {
         throw new NotFoundException();
       }
     } else {
-      const doctorEntity = await this.doctorRepository.findOne(doctor_id);
-
-      if (doctorEntity) {
-        newAppointment = new AppointmentEntity();
-
-        newAppointment.date = date;
-        newAppointment.doctor_id = doctorEntity.id;
-        newAppointment.newPatient = newPatient;
-      } else {
-        throw new NotFoundException();
+      try {
+        const doctorEntity = await this.doctorRepository.findOneOrFail(
+          doctor_id,
+        );
+        newAppointment = AppointmentEntity.create({
+          date: date,
+          newPatient: newPatient,
+          doctor: doctorEntity,
+        });
+      } catch (error) {
+        throw new NotFoundException(error);
       }
     }
 
@@ -77,9 +83,11 @@ export class AppointmentService implements IRepository {
 
   public async GetByID(id): Promise<AppointmentEntity> {
     try {
-      return await this.appointmentRepository.findOne(id);
+      return await this.appointmentRepository.findOneOrFail(id, {
+        relations: ['doctor', 'patient'],
+      });
     } catch (err) {
-      throw new InternalServerErrorException(err);
+      throw new NotFoundException();
     }
   }
 }

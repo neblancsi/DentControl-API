@@ -2,13 +2,14 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
-import { Doctor } from 'src/models/IDoctor';
 import { Repository } from 'typeorm';
 import { DoctorEntity } from 'src/repositories/doctor/doctor.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IRepository } from 'src/common/interfaces/IRepository';
 import { AppointmentEntity } from 'src/repositories/appointment/appointment.entity';
+import { CreateDoctorDTO } from 'src/api/doctor/doctor.dto';
 
 @Injectable()
 export class DoctorService implements IRepository {
@@ -19,11 +20,9 @@ export class DoctorService implements IRepository {
     private readonly appointmentRepository: Repository<AppointmentEntity>,
   ) {}
 
-  public async Create(doctor: Doctor): Promise<void> {
-    const { name, email } = doctor;
-    const newDoctor = new DoctorEntity();
-    newDoctor.email = email;
-    newDoctor.name = name;
+  public async Create(dto: CreateDoctorDTO): Promise<void> {
+    const { name, email } = dto;
+    const newDoctor = DoctorEntity.create({ name, email });
 
     try {
       await newDoctor.save();
@@ -46,9 +45,9 @@ export class DoctorService implements IRepository {
 
   public async GetByID(id): Promise<DoctorEntity> {
     try {
-      return await this.doctorRepository.findOne(id);
+      return await this.doctorRepository.findOneOrFail(id);
     } catch (err) {
-      throw new InternalServerErrorException(err);
+      throw new NotFoundException();
     }
   }
 }

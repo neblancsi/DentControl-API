@@ -1,4 +1,3 @@
-import { Doctor } from 'src/models/IDoctor';
 import {
   Column,
   Entity,
@@ -9,8 +8,8 @@ import {
 import { AppointmentEntity } from '../appointment/appointment.entity';
 
 @Entity()
-export class DoctorEntity extends BaseEntity implements Doctor {
-  @PrimaryGeneratedColumn()
+export class DoctorEntity extends BaseEntity {
+  @PrimaryGeneratedColumn() //TODO uuid
   id: number;
 
   @Column()
@@ -19,7 +18,7 @@ export class DoctorEntity extends BaseEntity implements Doctor {
   @Column()
   email: string;
 
-  @OneToMany(() => AppointmentEntity, (appointment) => appointment.doctor_id, {
+  @OneToMany(() => AppointmentEntity, (appointment) => appointment.doctor, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })

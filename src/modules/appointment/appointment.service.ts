@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppointmentEntity } from 'src/repositories/appointment/appointment.entity';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 import { DoctorEntity } from 'src/repositories/doctor/doctor.entity';
 import { IRepository } from 'src/common/interfaces/IRepository';
 import { PatientEntity } from 'src/repositories/patient/patient.entity';
@@ -87,6 +87,15 @@ export class AppointmentService implements IRepository {
         relations: ['doctor', 'patient'],
       });
     } catch (err) {
+      throw new NotFoundException();
+    }
+  }
+
+  public async DeleteOne(id): Promise<void> {
+    try {
+      const appointment = await this.appointmentRepository.findOneOrFail(id);
+      await this.appointmentRepository.remove(appointment);
+    } catch (error) {
       throw new NotFoundException();
     }
   }

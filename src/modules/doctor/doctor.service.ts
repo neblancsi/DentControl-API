@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 import { DoctorEntity } from 'src/repositories/doctor/doctor.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IRepository } from 'src/common/interfaces/IRepository';
-import { AppointmentEntity } from 'src/repositories/appointment/appointment.entity';
 import { CreateDoctorDTO } from 'src/api/doctor/doctor.dto';
 
 @Injectable()
@@ -16,8 +15,6 @@ export class DoctorService implements IRepository {
   constructor(
     @InjectRepository(DoctorEntity)
     private readonly doctorRepository: Repository<DoctorEntity>,
-    @InjectRepository(AppointmentEntity)
-    private readonly appointmentRepository: Repository<AppointmentEntity>,
   ) {}
 
   public async Create(dto: CreateDoctorDTO): Promise<void> {
@@ -47,6 +44,15 @@ export class DoctorService implements IRepository {
     try {
       return await this.doctorRepository.findOneOrFail(id);
     } catch (err) {
+      throw new NotFoundException();
+    }
+  }
+
+  public async DeleteOne(id): Promise<void> {
+    try {
+      const appointment = await this.doctorRepository.findOneOrFail(id);
+      await this.doctorRepository.remove(appointment);
+    } catch (error) {
       throw new NotFoundException();
     }
   }

@@ -47,4 +47,13 @@ export class PatientService implements IRepository {
       throw new NotFoundException();
     }
   }
+
+  public async DeleteOne(id): Promise<void> {
+    try {
+      const appointment = await this.patientRepository.findOneOrFail(id);
+      await this.patientRepository.remove(appointment);
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
 }

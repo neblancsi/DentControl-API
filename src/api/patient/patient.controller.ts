@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { PatientService } from 'src/modules/patient/patient.service';
 import { CreatePatientDTO, GetPatientDTO } from './patient.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -14,6 +22,7 @@ export class PatientController {
   ) {}
 
   @Post()
+  @HttpCode(204)
   public async createOne(@Body() dto: CreatePatientDTO): Promise<void> {
     await this.patientService.Create(dto);
   }
@@ -30,5 +39,11 @@ export class PatientController {
     const result = await this.patientService.GetByID(id);
     const mappedResult = this.mapper.DomainToDTOMapper([result])[0];
     return mappedResult;
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  public async deleteOne(@Param('id') id: number): Promise<void> {
+    await this.patientService.DeleteOne(id);
   }
 }

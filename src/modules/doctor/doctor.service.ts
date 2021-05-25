@@ -17,12 +17,12 @@ export class DoctorService implements IRepository {
     private readonly doctorRepository: Repository<DoctorEntity>,
   ) {}
 
-  public async Create(dto: CreateDoctorDTO): Promise<void> {
+  public async Create(dto: CreateDoctorDTO): Promise<DoctorEntity> {
     const { name, email } = dto;
     const newDoctor = DoctorEntity.create({ name, email });
 
     try {
-      await newDoctor.save();
+      return await newDoctor.save();
     } catch (err) {
       if (err.code === '23502') {
         throw new BadRequestException();

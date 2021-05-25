@@ -14,6 +14,18 @@ export class CreateAppointmentDTO {
   public readonly newPatient: boolean;
 }
 
+export class UpdateAppointmentDTO {
+  @IsOptional()
+  @IsISO8601()
+  public readonly date?: Date;
+  @IsOptional()
+  @IsInt()
+  public readonly doctor_id?: number;
+  @IsOptional()
+  @IsInt()
+  public readonly patient_id?: number;
+}
+
 export class GetAllAppointmentsDTO {
   public readonly id: number;
   public readonly date: Date;

@@ -6,16 +6,19 @@ import {
   HttpCode,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { AppointmentService } from 'src/modules/appointment/appointment.service';
 import {
   CreateAppointmentDTO,
   GetAllAppointmentsDTO,
   GetAppointmentDTO,
+  UpdateAppointmentDTO,
 } from './appointment.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AppointmentValidationPipe } from 'src/common/pipes/appointmentValidation.pipe';
 import { AppointmentMapper } from './appointment.mapper';
+import { AppointmentEntity } from 'src/repositories/appointment/appointment.entity';
 
 @ApiTags('appointment')
 @ApiBearerAuth()
@@ -27,11 +30,10 @@ export class AppointmentController {
   ) {}
 
   @Post()
-  @HttpCode(204)
   public async Create(
     @Body(new AppointmentValidationPipe()) dto: CreateAppointmentDTO,
-  ): Promise<void> {
-    await this.appointmentService.Create(dto);
+  ): Promise<AppointmentEntity> {
+    return await this.appointmentService.Create(dto);
   }
 
   @Get()
@@ -52,5 +54,13 @@ export class AppointmentController {
   @HttpCode(204)
   public async deleteOne(@Param('id') id: number): Promise<void> {
     await this.appointmentService.DeleteOne(id);
+  }
+
+  @Put(':id')
+  public async updateOne(
+    @Param('id') id: number,
+    @Body() dto: UpdateAppointmentDTO,
+  ): Promise<AppointmentEntity> {
+    return await this.appointmentService.UpdateOne(id, dto);
   }
 }

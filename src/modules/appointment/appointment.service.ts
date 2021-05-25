@@ -6,11 +6,14 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppointmentEntity } from 'src/repositories/appointment/appointment.entity';
-import { EntityNotFoundError, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { DoctorEntity } from 'src/repositories/doctor/doctor.entity';
 import { IRepository } from 'src/common/interfaces/IRepository';
 import { PatientEntity } from 'src/repositories/patient/patient.entity';
-import { CreateAppointmentDTO } from 'src/api/appointment/appointment.dto';
+import {
+  CreateAppointmentDTO,
+  UpdateAppointmentDTO,
+} from 'src/api/appointment/appointment.dto';
 
 @Injectable()
 export class AppointmentService implements IRepository {
@@ -23,10 +26,10 @@ export class AppointmentService implements IRepository {
     private readonly appointmentRepository: Repository<AppointmentEntity>,
   ) {}
 
-  public async Create(dto: CreateAppointmentDTO): Promise<void> {
+  public async Create(dto: CreateAppointmentDTO): Promise<AppointmentEntity> {
     const { date, doctor_id, patient_id, newPatient } = dto;
 
-    let newAppointment;
+    let newAppointment: AppointmentEntity;
 
     if (!newPatient) {
       try {
@@ -63,7 +66,7 @@ export class AppointmentService implements IRepository {
     }
 
     try {
-      await newAppointment.save();
+      return await newAppointment.save();
     } catch (err) {
       if (err.code === '23502') {
         throw new BadRequestException();
@@ -81,7 +84,7 @@ export class AppointmentService implements IRepository {
     }
   }
 
-  public async GetByID(id): Promise<AppointmentEntity> {
+  public async GetByID(id: number): Promise<AppointmentEntity> {
     try {
       return await this.appointmentRepository.findOneOrFail(id, {
         relations: ['doctor', 'patient'],
@@ -91,12 +94,48 @@ export class AppointmentService implements IRepository {
     }
   }
 
-  public async DeleteOne(id): Promise<void> {
+  public async DeleteOne(id: number): Promise<void> {
     try {
       const appointment = await this.appointmentRepository.findOneOrFail(id);
       await this.appointmentRepository.remove(appointment);
     } catch (error) {
       throw new NotFoundException();
+    }
+  }
+
+  public async UpdateOne(
+    id: number,
+    dto: UpdateAppointmentDTO,
+  ): Promise<AppointmentEntity> {
+    const { date, doctor_id, patient_id } = dto;
+    let appointment: AppointmentEntity;
+    let patientEntity: PatientEntity;
+    let doctorEntity: DoctorEntity;
+    try {
+      appointment = await this.appointmentRepository.findOneOrFail(id, {
+        relations: ['doctor', 'patient'],
+      });
+
+      if (patient_id) {
+        patientEntity = await this.patientRepository.findOneOrFail(patient_id);
+      }
+      if (doctor_id) {
+        doctorEntity = await this.doctorRepository.findOneOrFail(doctor_id);
+      }
+    } catch (error) {
+      throw new NotFoundException();
+    }
+
+    if (date) {
+      appointment.date = date;
+    }
+    appointment.doctor = doctorEntity;
+    appointment.patient = patientEntity;
+
+    try {
+      return await appointment.save({});
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 }

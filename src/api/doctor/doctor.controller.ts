@@ -11,6 +11,7 @@ import { DoctorService } from 'src/modules/doctor/doctor.service';
 import { CreateDoctorDTO, GetDoctorDTO } from './doctor.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DoctorMapper } from './doctor.mapper';
+import { DoctorEntity } from 'src/repositories/doctor/doctor.entity';
 
 @ApiTags('doctor')
 @ApiBearerAuth()
@@ -22,9 +23,8 @@ export class DoctorController {
   ) {}
 
   @Post()
-  @HttpCode(204)
-  public async Create(@Body() dto: CreateDoctorDTO): Promise<void> {
-    await this.doctorService.Create(dto);
+  public async Create(@Body() dto: CreateDoctorDTO): Promise<DoctorEntity> {
+    return await this.doctorService.Create(dto);
   }
 
   @Get()

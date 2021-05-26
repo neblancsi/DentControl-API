@@ -14,6 +14,8 @@ import {
   CreateAppointmentDTO,
   UpdateAppointmentDTO,
 } from 'src/api/appointment/appointment.dto';
+import { AppointmentState } from 'src/common/enums/appointment-state.enum';
+import { networkInterfaces } from 'os';
 
 @Injectable()
 export class AppointmentService implements IRepository {
@@ -46,6 +48,7 @@ export class AppointmentService implements IRepository {
           doctor: doctorEntity,
           patient: patientEntity,
           newPatient: newPatient,
+          appointmentState: AppointmentState.TO_BE_STARTED,
         });
       } catch (error) {
         throw new NotFoundException();
@@ -59,6 +62,7 @@ export class AppointmentService implements IRepository {
           date: date,
           newPatient: newPatient,
           doctor: doctorEntity,
+          appointmentState: AppointmentState.TO_BE_STARTED,
         });
       } catch (error) {
         throw new NotFoundException(error);
@@ -94,6 +98,19 @@ export class AppointmentService implements IRepository {
     }
   }
 
+  public async GetCurrent(): Promise<AppointmentEntity[]> {
+    try {
+      return await this.appointmentRepository
+        .createQueryBuilder('appointment')
+        .leftJoinAndSelect('appointment.doctor', 'doctor')
+        .leftJoinAndSelect('appointment.patient', 'patient')
+        .where(`DATE_TRUNC('day', "date") = DATE_TRUNC('day',now())`)
+        .getMany();
+    } catch (error) {
+      throw new NotFoundException('no appointments found for today');
+    }
+  }
+
   public async DeleteOne(id: number): Promise<void> {
     try {
       const appointment = await this.appointmentRepository.findOneOrFail(id);
@@ -107,7 +124,7 @@ export class AppointmentService implements IRepository {
     id: number,
     dto: UpdateAppointmentDTO,
   ): Promise<AppointmentEntity> {
-    const { date, doctor_id, patient_id } = dto;
+    const { date, doctor_id, patient_id, appointmentState } = dto;
     let appointment: AppointmentEntity;
     let patientEntity: PatientEntity;
     let doctorEntity: DoctorEntity;
@@ -129,6 +146,10 @@ export class AppointmentService implements IRepository {
     if (date) {
       appointment.date = date;
     }
+    if (appointmentState) {
+      appointment.appointmentState = appointmentState;
+    }
+
     appointment.doctor = doctorEntity;
     appointment.patient = patientEntity;
 

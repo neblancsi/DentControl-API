@@ -1,4 +1,11 @@
-import { IsBoolean, IsInt, IsISO8601, IsOptional } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsISO8601,
+  IsOptional,
+} from 'class-validator';
+import { AppointmentState } from 'src/common/enums/appointment-state.enum';
 import { DoctorEntity } from 'src/repositories/doctor/doctor.entity';
 import { PatientEntity } from 'src/repositories/patient/patient.entity';
 
@@ -24,12 +31,16 @@ export class UpdateAppointmentDTO {
   @IsOptional()
   @IsInt()
   public readonly patient_id?: number;
+  @IsOptional()
+  @IsEnum(AppointmentState)
+  public readonly appointmentState?: AppointmentState;
 }
 
 export class GetAllAppointmentsDTO {
   public readonly id: number;
   public readonly date: Date;
   public readonly newPatient: boolean;
+  public readonly appointmentState: AppointmentState;
 }
 
 export class GetAppointmentDTO extends GetAllAppointmentsDTO {

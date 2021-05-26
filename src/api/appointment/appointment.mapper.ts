@@ -12,6 +12,7 @@ export class AppointmentMapper implements IMapper {
       patient: item.patient,
       newPatient: item.newPatient,
       id: item.id,
+      appointmentState: item.appointmentState,
     }));
     return mappedResult;
   }
@@ -23,6 +24,7 @@ export class AppointmentMapper implements IMapper {
       date: item.date,
       newPatient: item.newPatient,
       id: item.id,
+      appointmentState: item.appointmentState,
     }));
     return mappedResult;
   }

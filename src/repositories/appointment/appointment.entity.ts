@@ -1,3 +1,4 @@
+import { AppointmentState } from 'src/common/enums/appointment-state.enum';
 import {
   Column,
   Entity,
@@ -19,6 +20,9 @@ export class AppointmentEntity extends BaseEntity {
 
   @Column()
   newPatient: boolean;
+
+  @Column()
+  appointmentState: AppointmentState;
 
   @ManyToOne(() => PatientEntity, (patient) => patient.id, {
     onUpdate: 'CASCADE',

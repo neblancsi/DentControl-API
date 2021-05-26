@@ -43,10 +43,18 @@ export class AppointmentController {
     return mappedResult;
   }
 
-  @Get(':id')
+  @Get('id/:id')
   public async getByID(@Param('id') id: number): Promise<GetAppointmentDTO> {
     const result = await this.appointmentService.GetByID(id);
     const mappedResult = this.mapper.DomainToDTOMapper([result])[0];
+    return mappedResult;
+  }
+
+  @Get('/current')
+  public async getCurrent(): Promise<GetAppointmentDTO[]> {
+    const result = await this.appointmentService.GetCurrent();
+    console.log(result);
+    const mappedResult = this.mapper.DomainToDTOMapper(result);
     return mappedResult;
   }
 
